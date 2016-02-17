@@ -16,21 +16,13 @@ module OmniAuth
         'scope' => 'CompanyFile'
       }
 
-      uid { raw_info[0]['Id'] }
+      uid { access_token['user']['uid'] }
 
-      info do
+      info do # http://myobapi.tumblr.com/post/90433459429/single-sign-on-with-myobapi
         {
-          'name'     => raw_info[0]['Name'].to_s,
-          'uri'      => raw_info[0]['Uri'].to_s,
+          'uid' => access_token['user']['uid'],
+          'email' => access_token['user']['username']
         }
-      end
-
-      extra do
-        { :raw_info => raw_info }
-      end
-
-      def raw_info
-        @raw_info ||= MultiJson.load(access_token.get('https://api.myob.com/accountright/', {:headers => headers}).body)
       end
 
       private
